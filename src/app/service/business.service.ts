@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class BusinessService {
 
-  uri = 'http://localhost:4001/business';
+  // uri = 'http://localhost:3000/business';
+  uri=environment.apiUrl;
 
   constructor(private http: HttpClient) { }
 
@@ -16,17 +18,17 @@ export class BusinessService {
       business_gst_number: business_gst_number
     };
     console.log(obj);
-    this.http.post(`${this.uri}/add`, obj)
+    this.http.post(`${this.uri}/business/add`, obj)
         .subscribe(res => console.log('Done'));
   }
   getBusinesses(){
-    return this.http.get(`${this.uri}`);
+    return this.http.get(`${this.uri}/business`);
   }
 
   editBusiness(id) {
     return this
             .http
-            .get(`${this.uri}/edit/${id}`);
+            .get(`${this.uri}/business/edit/${id}`);
     }
 updateBusiness(person_name, business_name, business_gst_number, id) {
 
@@ -37,13 +39,13 @@ updateBusiness(person_name, business_name, business_gst_number, id) {
         };
       this
         .http
-        .post(`${this.uri}/update/${id}`, obj)
+        .post(`${this.uri}/business/update/${id}`, obj)
         .subscribe(res => console.log('Done'));
     }
     deleteBusiness(id) {
       return this
                 .http
-                .get(`${this.uri}/delete/${id}`);
+                .get(`${this.uri}/business/delete/${id}`);
     }
 
 }

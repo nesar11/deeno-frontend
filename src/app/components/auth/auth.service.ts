@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import * as moment from 'moment';
+import { environment } from '../../../environments/environment';
 
 const jwt = new JwtHelperService();
 class DecodedToken {
@@ -15,7 +16,8 @@ class DecodedToken {
   providedIn: 'root'
 })
 export class AuthService {
-  private uriseg = 'http://localhost:4001/users';
+  // private uriseg = 'http://localhost:4001/users';
+  private uriseg = environment.apiUrl;
   private decodedToken;
 
   constructor(private http: HttpClient) {
@@ -23,11 +25,11 @@ export class AuthService {
    }
 
    public register(userData: any): Observable<any> {
-    const URI = this.uriseg + '/register';
+    const URI = this.uriseg + '/users/register';
     return this.http.post(URI, userData);
   }
   public login(userData: any): Observable<any> {
-    const URI = this.uriseg + '/login';
+    const URI = this.uriseg + '/users/login';
     return this.http.post(URI, userData).pipe(map(token => {
       return this.saveToken(token);
     }));
@@ -59,6 +61,6 @@ export class AuthService {
       return this.decodedToken.username;
   }
   getUser(){
-    return this.http.get(`${this.uriseg}`);
+    return this.http.get(`${this.uriseg}/users`);
   }
 }

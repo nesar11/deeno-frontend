@@ -10,54 +10,51 @@ import { FormGroup,  FormBuilder,  Validators } from '@angular/forms';
 import 'rxjs/add/operator/map';
 import 'rxjs/Rx';
 import Coin from '../models/Coin';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CoinService {
+  uri = environment.apiUrl;
   result: any;
   searchresult: any;
   httpOptions = {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
   };
 
-  uri = 'http://localhost:4001/coins'
+  // uri = 'http://localhost:4001/coins'
+
   handleError: any;
   constructor( private http: HttpClient) { }
   addCoin(name, price) {
-    const uri = 'http://localhost:4001/coins/add';
+    // const uri = 'http://localhost:4001/coins/add';
     const obj = {
       name: name,
       price: price
     };
-    this.http.post(uri, obj)
+    this.http.post(`${this.uri}/coins/add`, obj)
         .subscribe(res => console.log('Done'));
   }
 
   getCoins() {
-    const uri = 'http://localhost:4001/coins';
-    return this
-            .http
-            .get(uri)
-            .map(res => {
-              return res;
-      });
+    return this.http.get(`${this.uri}/coins`);
   }
 
 
 
 
   editCoin(id) {
-    const uri = 'http://localhost:4001/coins/edit/' + id;
+    console.log(id);
     return this
             .http
-            .get(uri)
-            .map(res => {
-              return res;
-            });
-  }
+            .get(`${this.uri}/coins/edit/${id}`);
+
+    }
+
   updateCoin(name, price, id) {
-    const uri = 'http://localhost:4001/coins/update/' + id;
+
+
 
     const obj = {
       name: name,
@@ -65,15 +62,15 @@ export class CoinService {
     };
     this
       .http
-      .post(uri, obj)
+      .post(`${this.uri}/coins/update/${id}`, obj)
       .subscribe(res => console.log('Done'));
   }
   deleteCoin(id) {
-    const uri = 'http://localhost:4001/coins/delete/' + id;
+    // const uri = 'http://localhost:4001/coins/delete/' + id;
 
         return this
             .http
-            .get(uri)
+            .get(`${this.uri}/coins/delete/${id}`)
             .map(res => {
               return res;
             });

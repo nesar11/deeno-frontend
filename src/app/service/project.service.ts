@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectService {
-  uri = 'http://localhost:4001/projects';
+  // uri = 'http://localhost:4001/projects';
+  uri = environment.apiUrl
 
   constructor( private http: HttpClient) { }
   addProject(projectName, story, duration, startTime, endTime, status){
@@ -18,16 +20,16 @@ export class ProjectService {
       status
     };
     console.log(obj);
-    this.http.post(`${this.uri}/add`, obj)
+    this.http.post(`${this.uri}/projects/add`, obj)
     .subscribe(res => console.log('project add success'))
   }
 
   getProjects(){
-    return this.http.get(`${this.uri}`);
+    return this.http.get(`${this.uri}/projects`);
 
   }
   editProject(id){
-    return this.http.get(`${this.uri}/edit/${id}`);
+    return this.http.get(`${this.uri}/projects/edit/${id}`);
 
   }
 
@@ -40,12 +42,12 @@ export class ProjectService {
       endTime,
       status
     };
-    this.http.post(`${this.uri}/update/${id}`, obj)
+    this.http.post(`${this.uri}/projects/update/${id}`, obj)
     .subscribe(res=> console.log(' project updated'))
 
   }
 
   deleteProject(id){
-    return this.http.get(`${this.uri}/delete/${id}`);
+    return this.http.get(`${this.uri}/projects/delete/${id}`);
   }
 }
