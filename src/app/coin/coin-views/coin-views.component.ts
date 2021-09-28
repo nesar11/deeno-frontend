@@ -8,15 +8,25 @@ import { Subject, throwError } from 'rxjs';
 import { map, debounceTime, distinctUntilChanged, switchMap, catchError, retryWhen, retry} from 'rxjs/operators'
 import * as XLSX from 'xlsx';
 import {SearchService } from '../search/search.service';
+import { MatTableDataSource } from '@angular/material/table';
 
+export interface PeriodicElement {
+  name: string;
+  price: number;
+
+}
 @Component({
   selector: 'app-coin-views',
   templateUrl: './coin-views.component.html',
   styleUrls: ['./coin-views.component.css']
 })
 export class CoinViewsComponent implements OnInit {
-  coins : any;
+  coins = [];
+  coinData : any;
+  displayedColumns: string[] = ['name', 'price', 'date'];
   fileName= 'ExcelSheet.xlsx';
+
+
   constructor(private http: HttpClient,
               private cs: CoinService,
               private route: ActivatedRoute,
@@ -35,9 +45,10 @@ export class CoinViewsComponent implements OnInit {
     this.getCoins();
   }
 getCoins(){
-    this.cs.getCoins().subscribe(res =>{
+    this.cs.getCoins().subscribe((res: any[]) =>{
       this.coins = res;
-      console.log(this.getCoins);
+      this.coinData = new MatTableDataSource(this.coins);
+      console.log(this.coins);
     });
   }
 

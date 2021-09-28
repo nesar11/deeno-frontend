@@ -1,13 +1,10 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import { BehaviorSubject, Observable, of as observableOf } from 'rxjs';
 import {catchError, retry, tap} from 'rxjs/operators';
 import { Router } from '@angular/router';
-import { map } from 'rxjs/operators';
-import 'rxjs/Rx';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
+
+import { Subject } from "rxjs";
 import { environment } from '../../environments/environment';
 
 @Injectable({

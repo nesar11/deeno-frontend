@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
+import { Subject } from "rxjs";
 import { catchError, map, tap } from 'rxjs/operators';
 
 import { FormGroup,  FormBuilder,  Validators } from '@angular/forms';
-
-
-import 'rxjs/add/operator/map';
-import 'rxjs/Rx';
 import Coin from '../models/Coin';
 import { environment } from '../../environments/environment';
 

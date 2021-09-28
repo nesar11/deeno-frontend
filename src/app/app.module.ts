@@ -38,6 +38,7 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import {AuthModule} from './components/auth/auth.module';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import {SearchModule } from './coin/search/search.module';
+import {MatTableModule} from '@angular/material/table';
 @NgModule({
   declarations: [
     AppComponent,
@@ -77,7 +78,8 @@ import {SearchModule } from './coin/search/search.module';
     FormsModule,
     NgbModule,
     MDBBootstrapModule.forRoot(),
-    SearchModule
+    SearchModule,
+    MatTableModule
   ],
   providers: [
     {
