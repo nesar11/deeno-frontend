@@ -11,7 +11,7 @@
 
 </nav>
 
-<div class="space">
+<div class="space mat-elevation-z8">
   <table mat-table [dataSource]="coinData" class="mat-elevation-z8">
 
     <!--- Note that these columns can be defined in any order.
@@ -30,19 +30,36 @@
     </ng-container>
 
     <!-- Weight Column -->
-    <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef> Date </th>
+    <ng-container matColumnDef="create">
+      <th mat-header-cell *matHeaderCellDef> Created </th>
+      <td mat-cell *matCellDef="let element"> {{element.updatedAt | date: 'mediumDate'}} </td>
+    </ng-container>
+    <!-- Weight Column -->
+    <ng-container matColumnDef="update">
+      <th mat-header-cell *matHeaderCellDef> Updated </th>
       <td mat-cell *matCellDef="let element"> {{element.updatedAt | date: 'mediumDate'}} </td>
     </ng-container>
 
     <!-- Symbol Column -->
-    <ng-container matColumnDef="Action">
+    <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef> Action </th>
-      <td mat-cell *matCellDef="let element"> {{element.Action}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.Action}}
+
+        <button mat-fab color="accent" class="coinEditIcon"aria-label="icon button with a edit icon">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-fab color="accent" class="coinDeleteIcon" aria-label=" icon button with a delete icon">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
-
+  <mat-paginator [length]="pageLength"
+                [pageSizeOptions]="[5, 10, 20]"
+                 showFirstLastButtons
+                 aria-label="Select page of periodic elements">
+  </mat-paginator>
 </div>

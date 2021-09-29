@@ -9,21 +9,33 @@ import { map, debounceTime, distinctUntilChanged, switchMap, catchError, retryWh
 import * as XLSX from 'xlsx';
 import {SearchService } from '../search/search.service';
 import { MatTableDataSource } from '@angular/material/table';
-
+// import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {MatPaginator} from '@angular/material/paginator';
 export interface PeriodicElement {
   name: string;
   price: number;
 
 }
+import {AfterViewInit,  ViewChild} from '@angular/core';
 @Component({
   selector: 'app-coin-views',
   templateUrl: './coin-views.component.html',
   styleUrls: ['./coin-views.component.css']
 })
+
+
 export class CoinViewsComponent implements OnInit {
   coins = [];
   coinData : any;
-  displayedColumns: string[] = ['name', 'price', 'date'];
+  pageLength: any;
+
+  displayedColumns: string[] = ['name', 'price', 'create','update','action'];
+
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+
+  // ngAfterViewInit() {
+  //   this.coinData.paginator = this.paginator;
+  // }
   fileName= 'ExcelSheet.xlsx';
 
 
@@ -47,9 +59,13 @@ export class CoinViewsComponent implements OnInit {
 getCoins(){
     this.cs.getCoins().subscribe((res: any[]) =>{
       this.coins = res;
+      this.pageLength = res.length;
+
       this.coinData = new MatTableDataSource(this.coins);
+      this.coinData.paginator = this.paginator;
       console.log(this.coins);
     });
+
   }
 
   deleteCoin(id) {

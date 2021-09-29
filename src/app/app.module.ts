@@ -39,6 +39,7 @@ import {AuthModule} from './components/auth/auth.module';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import {SearchModule } from './coin/search/search.module';
 import {MatTableModule} from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
 @NgModule({
   declarations: [
     AppComponent,
@@ -79,7 +80,11 @@ import {MatTableModule} from '@angular/material/table';
     NgbModule,
     MDBBootstrapModule.forRoot(),
     SearchModule,
-    MatTableModule
+    MatTableModule,
+    MatPaginatorModule
+
+
+
   ],
   providers: [
     {
