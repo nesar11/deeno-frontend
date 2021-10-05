@@ -5,14 +5,22 @@
     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
   </form> -->
 
-    <app-widget-search-bar-button></app-widget-search-bar-button>
-    <td> <button class="nav-link" routerLink="/add" class="btn btn-primary">
-      <span class=" navIcon material-icons">add</span> Create</button></td>
+  <div>
+  <input type="text" placeholder="Search Coin" [(ngModel)]="coinSearch" (keyup)="onKeyup($event)">
+</div>
+  <!-- <div>
+  <input type="text" [(ngModel)]="coinSearch" >
+  <button (click)="onKeyup($event)"> search</button>
+</div> -->
+<button (click)="onExportExcel()"> Export Excel</button>
 
 </nav>
 
-<div class="space mat-elevation-z8">
-  <table mat-table [dataSource]="coinData" class="mat-elevation-z8">
+
+
+<div class="space mat-elevation-z8" *ngIf="pageLength>0">
+  <table mat-table [dataSource]="coinData" class="mat-elevation-z8" >
+
 
     <!--- Note that these columns can be defined in any order.
           The actual rendered columns are set as a property on the row definition" -->
@@ -44,13 +52,13 @@
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef> Action </th>
       <td mat-cell *matCellDef="let element"> {{element.Action}}
-
-        <button mat-fab color="accent" class="coinEditIcon"aria-label="icon button with a edit icon">
+       <button mat-icon-button color="warn" [routerLink]="['/edit', element._id]" (click)="onEditCoin(element._id)" aria-label="Example icon button with a heart icon" >
           <mat-icon>edit</mat-icon>
         </button>
-        <button mat-fab color="accent" class="coinDeleteIcon" aria-label=" icon button with a delete icon">
+         <button mat-icon-button color="warn" (click)="onDeleteCoin(element._id)" aria-label="Example icon button with a heart icon">
           <mat-icon>delete</mat-icon>
         </button>
+
       </td>
     </ng-container>
 
@@ -58,8 +66,12 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
   </table>
   <mat-paginator [length]="pageLength"
-                [pageSizeOptions]="[5, 10, 20]"
+                [pageSizeOptions]="[ 10, 20,  40]"
                  showFirstLastButtons
                  aria-label="Select page of periodic elements">
   </mat-paginator>
+
+</div>
+<div *ngIf="pageLength<1">
+  <p> There is no filtered result </p>
 </div>

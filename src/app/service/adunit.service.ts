@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
 export class AdunitService {
 
-  uri = 'http://localhost:4001/adunits';
+  // uri = 'http://localhost:4001/adunits';
+  uri = environment.apiUrl
 
   constructor(private http: HttpClient) { }
 
@@ -14,20 +16,20 @@ export class AdunitService {
       unit_name: unit_name,
       unit_price: unit_price
     };
-    this.http.post(`${this.uri}/add`, obj)
+    this.http.post(`${this.uri}/adunits/add`, obj)
         .subscribe(res => console.log('Done'));
   }
 
 getAdUnits() {
   return this
          .http
-         .get(`${this.uri}`);
+         .get(`${this.uri}/adunits`);
   }
 
 editAdUnit(id) {
     return this
               .http
-              .get(`${this.uri}/edit/${id}`);
+              .get(`${this.uri}/adunits/edit/${id}`);
     }
 
 updateAdUnit(unit_name, unit_price, id) {
@@ -38,7 +40,7 @@ updateAdUnit(unit_name, unit_price, id) {
       };
       this
         .http
-        .post(`${this.uri}/update/${id}`, obj)
+        .post(`${this.uri}/adunits/update/${id}`, obj)
         .subscribe(res => console.log('Done'));
     }
 
@@ -46,7 +48,7 @@ updateAdUnit(unit_name, unit_price, id) {
   deleteAdUnit(id) {
       return this
                 .http
-                .get(`${this.uri}/delete/${id}`);
+                .get(`${this.uri}/adunits/delete/${id}`);
   }
 }
 

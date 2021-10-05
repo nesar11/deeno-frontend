@@ -16,8 +16,9 @@ import { PAddComponent } from './components/project/p-add/p-add.component';
 import { PEditComponent } from './components/project/p-edit/p-edit.component';
 import { PViewComponent } from './components/project/p-view/p-view.component';
 import { AuthGuard } from './components/auth/auth.guard';
+import { SideNavComponent} from './../app/components/side-nav/side-nav.component'
 export const routes: Routes = [
-  // { path: '**', redirectTo: '' },
+  { path: '***', redirectTo: 'coins' },
   {path: 'add', component: CoinAddComponent, canActivate: [AuthGuard]},
   {path: 'coins', component: CoinViewsComponent, canActivate: [AuthGuard] },
   {path: 'edit/:id', component: CoinUpdateComponent, canActivate: [AuthGuard]},
@@ -33,6 +34,7 @@ export const routes: Routes = [
   {path: 'projectAdd', component: PAddComponent, canActivate: [AuthGuard]},
   {path: 'projects', component: PViewComponent, canActivate: [AuthGuard]},
   {path: 'project/:id', component: PEditComponent, canActivate: [AuthGuard]},
+  {path:'s', component: SideNavComponent, canActivate: [AuthGuard]}
 ]
 
 @NgModule({

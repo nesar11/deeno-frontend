@@ -14,8 +14,10 @@ products: Product[];
   ngOnInit(): void {
     this.ps.getProducts().subscribe((data: Product[])=>{
       this.products= data;
+      console.log(this.products)
     })
   }
+
   deleteProduct(id){
 
     this.ps.deleteProduct(id).subscribe(res =>{

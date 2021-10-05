@@ -25,7 +25,7 @@ export class ProductService {
         .subscribe(res => console.log('Done'));
   }
   getProducts(){
-    return this.http.get(`${this.uri}`);
+    return this.http.get(`${this.uri}/products`);
   }
   editProduct(id){
     return this.http.get(`${this.uri}/products/edit/${id}`);
