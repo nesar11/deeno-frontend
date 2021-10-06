@@ -40,6 +40,8 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import {SearchModule } from './coin/search/search.module';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,6 +78,8 @@ import {MatPaginatorModule} from '@angular/material/paginator';
     MatSidenavModule,
     MatIconModule,
     MatListModule,
+    MatInputModule,
+    MatFormFieldModule,
     FormsModule,
     NgbModule,
     MDBBootstrapModule.forRoot(),

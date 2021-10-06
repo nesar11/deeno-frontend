@@ -5,3 +5,24 @@
 .space{
   margin-top: 1rem !important;
 }
+
+
+ table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.main-container {
+
+}
+
+.filter-form {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+
