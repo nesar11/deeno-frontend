@@ -16,9 +16,12 @@ import { PAddComponent } from './components/project/p-add/p-add.component';
 import { PEditComponent } from './components/project/p-edit/p-edit.component';
 import { PViewComponent } from './components/project/p-view/p-view.component';
 import { AuthGuard } from './components/auth/auth.guard';
-import { SideNavComponent} from './../app/components/side-nav/side-nav.component'
+import { SideNavComponent} from './../app/components/side-nav/side-nav.component';
+import {DashboardComponent} from './components/dashboard/dashboard.component'
+
 export const routes: Routes = [
   { path: '***', redirectTo: 'coins' },
+  {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
   {path: 'add', component: CoinAddComponent, canActivate: [AuthGuard]},
   {path: 'coins', component: CoinViewsComponent, canActivate: [AuthGuard] },
   {path: 'edit/:id', component: CoinUpdateComponent, canActivate: [AuthGuard]},
