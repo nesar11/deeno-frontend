@@ -50,5 +50,10 @@ updateAdUnit(unit_name, unit_price, id) {
                 .http
                 .get(`${this.uri}/adunits/delete/${id}`);
   }
+  maxAdunit(){
+    return this
+            .http
+            .get(`${this.uri}/adunits/maxAd`);
+  }
 }
 

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Chart } from 'chart.js';
+import { AdunitService } from 'src/app/service/adunit.service';
 import { CoinService } from 'src/app/service/coin.service';
 
 @Component({
@@ -18,11 +19,16 @@ export class DashboardComponent implements OnInit {
 
   // General variables
   coins = [];
+  adunits= [];
 
   // Chart variables
   myBarChart = new Chart('myChart', {});
+  adBarChart = new Chart('adChart', {});
 
-  constructor(private router: Router, private route: ActivatedRoute, private cs: CoinService) { }
+  constructor(private router: Router,
+    private route: ActivatedRoute,
+     private cs: CoinService,
+     private ads: AdunitService) { }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -33,6 +39,7 @@ export class DashboardComponent implements OnInit {
     });
 
     this.initCoins();
+    this.initAdUnit();
   }
 
   async initCoins() {
@@ -54,6 +61,25 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  async initAdUnit() {
+    await this.getAdunit().then(data => {
+      let x = [];
+      let y = [];
+
+      this.adunits = data;
+      console.log(this.adunits);
+
+      this.adunits.forEach(adUni => {
+        x.push(adUni._id);
+        y.push(adUni.avarageAdUnitPrice);
+      });
+
+      this.aDchartFunction(x, y);
+    }).catch(err => {
+      // Error message
+    });
+  }
+
   chartFunction(x, y) {
     this.myBarChart.data.datasets.pop();
 
@@ -62,7 +88,55 @@ export class DashboardComponent implements OnInit {
       data: {
         datasets: [{
           label: 'Number of Coins',
-          data: y
+          data: y,
+          backgroundColor: [
+            'rgba(255, 99, 132, 3)',
+            'rgba(54, 162, 235, 3)',
+            'rgba(255, 206, 86, 3)',
+            'rgba(75, 192, 192, 3)',
+            'rgba(153, 102, 255, 3)',
+            'rgba(255, 159, 64, 3)'
+        ],
+        borderColor: [
+
+
+      ],
+      borderWidth: 10
+        }],
+        labels: x
+      },
+
+      options: {
+        maintainAspectRatio: false,
+        responsive: true
+      },
+
+    })
+  }
+  aDchartFunction(x, y) {
+    console.log(x)
+    console.log(y)
+    this.adBarChart.data.datasets.pop();
+
+    this.adBarChart = new Chart('barChart', {
+      type: 'bar',
+      data: {
+        datasets: [{
+          label: 'Number of Adunits',
+          data: y,
+          backgroundColor: [
+            'rgba(255, 99, 132, 3)',
+            'rgba(54, 162, 235, 3)',
+            'rgba(255, 206, 86, 3)',
+            'rgba(75, 192, 192, 3)',
+            'rgba(153, 102, 255, 3)',
+            'rgba(255, 159, 64, 3)'
+        ],
+        borderColor: [
+
+
+      ],
+      borderWidth: 10
         }],
         labels: x
       },
@@ -75,10 +149,26 @@ export class DashboardComponent implements OnInit {
     })
   }
 
-  // API Functions
+  // API Functions coins
   getCoin(query): Promise<any> {
     return new Promise((resolve, reject) => {
       this.cs.getCoins(query)
+        .subscribe(response => {
+          if (response) {
+            resolve(response);
+          }
+        }, err => {
+          if (err) {
+            reject(err);
+          }
+        });
+    });
+  }
+
+  // API Functions
+  getAdunit(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.ads.maxAdunit()
         .subscribe(response => {
           if (response) {
             resolve(response);
