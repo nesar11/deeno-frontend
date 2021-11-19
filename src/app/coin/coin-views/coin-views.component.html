@@ -1,22 +1,5 @@
-<!-- <app-widget-search-bar></app-widget-search-bar> -->
-<nav class="navbar navbar-light bg-light">
-  <!-- <form class="form-inline">
-    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-  </form> -->
-
-  <div>
-  <input type="text" placeholder="Search Coin" [(ngModel)]="coinSearch" (keyup)="onKeyup($event)">
-</div>
-  <!-- <div>
-  <input type="text" [(ngModel)]="coinSearch" >
-  <button (click)="onKeyup($event)"> search</button>
-</div> -->
-<button (click)="onExportExcel()"> Export Excel</button>
-
-</nav>
-
-
+<button mat-raised-button color="accent" routerLink="/add"> add coin</button>
+<button mat-raised-button color="accent" (click)="onExportExcel()"> Export Excel</button>
 
 <div class="space mat-elevation-z8" *ngIf="pageLength>0">
   <table mat-table [dataSource]="coinData" class="mat-elevation-z8" >

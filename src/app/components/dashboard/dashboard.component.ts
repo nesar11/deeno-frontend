@@ -4,31 +4,37 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Chart } from 'chart.js';
 import { AdunitService } from 'src/app/service/adunit.service';
 import { CoinService } from 'src/app/service/coin.service';
+import { StudentService } from 'src/app/service/student.service';
 
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
   notify: string;
   range = new FormGroup({
     start: new FormControl(),
-    end: new FormControl()
+    end: new FormControl(),
   });
 
   // General variables
   coins = [];
-  adunits= [];
+  adunits = [];
+  students = [];
 
   // Chart variables
   myBarChart = new Chart('myChart', {});
   adBarChart = new Chart('adChart', {});
+  stBarChart = new Chart('stChart', {});
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private route: ActivatedRoute,
-     private cs: CoinService,
-     private ads: AdunitService) { }
+    private cs: CoinService,
+    private ss: StudentService,
+    private ads: AdunitService
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
@@ -40,44 +46,76 @@ export class DashboardComponent implements OnInit {
 
     this.initCoins();
     this.initAdUnit();
+    this.initStudents();
   }
 
   async initCoins() {
-    await this.getCoin('').then(data => {
-      let x = [];
-      let y = [];
+    await this.getCoin('')
+      .then((data) => {
+        let x = [];
+        let y = [];
 
-      this.coins = data;
-      console.log(this.coins);
+        this.coins = data;
 
-      this.coins.forEach(coin => {
-        x.push(coin.name);
-        y.push(coin.price);
+        this.coins.forEach((coin) => {
+          x.push(coin.name);
+          y.push(coin.price);
+        });
+
+        this.chartFunction(x, y);
       })
-
-      this.chartFunction(x, y);
-    }).catch(err => {
-      // Error message
-    });
+      .catch((err) => {
+        // Error message
+      });
   }
 
   async initAdUnit() {
-    await this.getAdunit().then(data => {
-      let x = [];
-      let y = [];
+    await this.getAdunit()
+      .then((data) => {
+        let x = [];
+        let y = [];
 
-      this.adunits = data;
-      console.log(this.adunits);
+        this.adunits = data;
 
-      this.adunits.forEach(adUni => {
-        x.push(adUni._id);
-        y.push(adUni.avarageAdUnitPrice);
+        this.adunits.forEach((adUni) => {
+          x.push(adUni.unit_name);
+          y.push(adUni.avarageAdUnitPrice);
+        });
+
+        this.aDchartFunction(x, y);
+      })
+      .catch((err) => {
+        // Error message
       });
+  }
 
-      this.aDchartFunction(x, y);
-    }).catch(err => {
-      // Error message
-    });
+  async initStudents() {
+    await this.getStudnet()
+      .then((data) => {
+        let x = [];
+        let y1 = [];
+        let y2 = [];
+        let y3 = [];
+        let y4 = [];
+
+        console.log(data);
+        this.students = data;
+
+        this.students.forEach((sTudent) => {
+          x.push(sTudent._id.Student_name);
+          y1.push(sTudent.semester_1);
+          y2.push(sTudent.semester_2);
+          y3.push(sTudent.semester_3);
+          y4.push(sTudent.semester_4);
+        });
+        console.log('x', x);
+        console.log('y', y1);
+        // this.aDchartFunction(x, y1);
+        this.sTchartFunction(x, y1, y2, y3, y4);
+      })
+      .catch((err) => {
+        // Error message
+      });
   }
 
   chartFunction(x, y) {
@@ -86,98 +124,212 @@ export class DashboardComponent implements OnInit {
     this.myBarChart = new Chart('myChart', {
       type: 'bar',
       data: {
-        datasets: [{
-          label: 'Number of Coins',
-          data: y,
-          backgroundColor: [
-            'rgba(255, 99, 132, 3)',
-            'rgba(54, 162, 235, 3)',
-            'rgba(255, 206, 86, 3)',
-            'rgba(75, 192, 192, 3)',
-            'rgba(153, 102, 255, 3)',
-            'rgba(255, 159, 64, 3)'
+        datasets: [
+          {
+            label: 'Number of Coins',
+            data: y,
+            backgroundColor: [
+              'rgba(255, 99, 132, 3)',
+              'rgba(54, 162, 235, 3)',
+              'rgba(255, 206, 86, 3)',
+              'rgba(75, 192, 192, 3)',
+              'rgba(153, 102, 255, 3)',
+              'rgba(255, 159, 64, 3)',
+            ],
+            borderColor: [],
+            borderWidth: 10,
+          },
         ],
-        borderColor: [
-
-
-      ],
-      borderWidth: 10
-        }],
-        labels: x
+        labels: x,
       },
 
       options: {
         maintainAspectRatio: false,
-        responsive: true
+        responsive: true,
+        tooltips: {
+          callbacks: {
+            label: function (tooltipItem, data) {
+              // console.log(tooltipItem, data);
+              return `RM${parseFloat(tooltipItem.value).toLocaleString()}`;
+            },
+          },
+        },
       },
-
-    })
+    });
   }
   aDchartFunction(x, y) {
-    console.log(x)
-    console.log(y)
     this.adBarChart.data.datasets.pop();
 
     this.adBarChart = new Chart('barChart', {
-      type: 'bar',
+      type: 'pie',
       data: {
-        datasets: [{
-          label: 'Number of Adunits',
-          data: y,
-          backgroundColor: [
-            'rgba(255, 99, 132, 3)',
-            'rgba(54, 162, 235, 3)',
-            'rgba(255, 206, 86, 3)',
-            'rgba(75, 192, 192, 3)',
-            'rgba(153, 102, 255, 3)',
-            'rgba(255, 159, 64, 3)'
+        datasets: [
+          {
+            label: 'Number of Adunits',
+            data: y,
+            backgroundColor: [
+              'rgba(255, 99, 132, 3)',
+              'rgba(54, 162, 235, 3)',
+              'rgba(255, 206, 86, 3)',
+              'rgba(75, 192, 192, 3)',
+              'rgba(153, 102, 255, 3)',
+              'rgba(255, 159, 64, 3)',
+            ],
+            borderColor: [],
+            borderWidth: 10,
+          },
         ],
-        borderColor: [
-
-
-      ],
-      borderWidth: 10
-        }],
-        labels: x
+        labels: x,
       },
 
       options: {
         maintainAspectRatio: false,
-        responsive: true
+        responsive: true,
+      },
+    });
+  }
+  sTchartFunction(x, y1, y2, y3, y4) {
+    console.log(x, y1, y2, y3, y4);
+    // console.log(x);
+    // console.log(y);
+    this.stBarChart.data.datasets.pop();
+
+    this.stBarChart = new Chart('stBarChart', {
+      type: 'bar',
+      data: {
+        datasets: [
+          {
+            label: 'Semester 1',
+            data: y1,
+            backgroundColor: [
+              'rgba(255, 99, 132, 3)',
+              // 'rgba(54, 162, 235, 3)',
+              // 'rgba(255, 206, 86, 3)',
+              // 'rgba(75, 192, 192, 3)',
+              // 'rgba(153, 102, 255, 3)',
+              // 'rgba(255, 159, 64, 3)',
+            ],
+            borderColor: [],
+            borderWidth: 10,
+          },
+          {
+            label: 'Semester 2',
+            data: y2,
+            backgroundColor: [
+              //  'rgba(255, 99, 132, 3)',
+              'rgba(54, 162, 235, 3)',
+              // 'rgba(153, 102, 255, 3)',
+              //  'rgba(255, 206, 86, 3)',
+              // 'rgba(75, 192, 192, 3)',
+
+              // 'rgba(255, 159, 64, 3)',
+            ],
+            borderColor: [],
+            borderWidth: 10,
+          },
+          {
+            label: 'Semester 3',
+            data: y3,
+            backgroundColor: [
+              // 'rgba(153, 102, 255, 3)',
+              //  'rgba(255, 99, 132, 3)',
+              //  'rgba(54, 162, 235, 3)',
+              'rgba(255, 206, 86, 3)',
+              'rgba(75, 192, 192, 3)',
+                            // 'rgba(255, 159, 64, 3)',
+            ],
+            borderColor: [],
+            borderWidth: 10,
+          },
+          {
+            label: 'Semester 4',
+            data: y4,
+            backgroundColor: [
+               'rgba(255, 99, 132, 3)',
+               'rgba(255, 159, 64, 3)',
+              'rgba(54, 162, 235, 3)',
+               'rgba(255, 206, 86, 3)',
+              'rgba(75, 192, 192, 3)',
+               'rgba(153, 102, 255, 3)',
+
+            ],
+            borderColor: [],
+            borderWidth: 10,
+          },
+        ],
+        labels: x,
       },
 
-    })
+      options: {
+        maintainAspectRatio: false,
+        responsive: true,
+        scales: {
+          xAxes: [
+            {
+              stacked: true,
+            },
+          ],
+          yAxes: [
+            {
+              stacked: true,
+            },
+          ],
+        },
+      },
+    });
   }
 
   // API Functions coins
   getCoin(query): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.cs.getCoins(query)
-        .subscribe(response => {
+      this.cs.getCoins(query).subscribe(
+        (response) => {
           if (response) {
             resolve(response);
           }
-        }, err => {
+        },
+        (err) => {
           if (err) {
             reject(err);
           }
-        });
+        }
+      );
     });
   }
 
   // API Functions
   getAdunit(): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.ads.maxAdunit()
-        .subscribe(response => {
+      this.ads.maxAdunit().subscribe(
+        (response) => {
           if (response) {
             resolve(response);
           }
-        }, err => {
+        },
+        (err) => {
           if (err) {
             reject(err);
           }
-        });
+        }
+      );
+    });
+  }
+
+  // API Functions
+  getStudnet(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.ss.maxStudent().subscribe(
+        (response) => {
+          if (response) {
+            resolve(response);
+          }
+        },
+        (err) => {
+          if (err) {
+            reject(err);
+          }
+        }
+      );
     });
   }
 }
