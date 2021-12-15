@@ -5,6 +5,9 @@ import { Chart } from 'chart.js';
 import { AdunitService } from 'src/app/service/adunit.service';
 import { CoinService } from 'src/app/service/coin.service';
 import { StudentService } from 'src/app/service/student.service';
+import html2canvas from "html2canvas";
+import { jsPDF } from "jspdf";
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-dashboard',
@@ -332,4 +335,47 @@ export class DashboardComponent implements OnInit {
       );
     });
   }
+
+// pdf downlaod
+
+onDownloadPdf() {
+  const element = document.getElementById('export-pdf');
+  var date = moment().toDate();
+  if (element) {
+      html2canvas(element, {
+          scale: 4
+      }).then(canvas => {
+          console.log(canvas);
+          var contentWidth = canvas.width;
+          var contentHeight = canvas.height;
+          var pageHeight = contentWidth / 595.28 * 841.89;
+          var leftHeight = contentHeight;
+          var position = 0;
+          var imgWidth = 595.28;
+          var imgHeight = 595.28 / contentWidth * contentHeight;
+          var pageData = canvas.toDataURL('image/jpeg', 1.0);
+          var pdf = new jsPDF('p', 'pt', 'a4');
+          if (leftHeight < pageHeight) {
+              pdf.addImage(pageData, 'JPEG', 0, 0, imgWidth, imgHeight);
+          } else {
+              while (leftHeight > 0) {
+                  pdf.addImage(pageData, 'JPEG', 0, position, imgWidth, imgHeight);
+                  leftHeight -= pageHeight;
+                  position -= 841.89;
+                  if (leftHeight > 0) {
+                      pdf.addPage()
+                  }
+              }
+          }
+          pdf.setFont("arial");
+          pdf.setFontSize(10);
+          pdf.text(`Note: This is system generated form and does not require signature`, 10, 835);
+          pdf.save('Report' + '-' + date);
+      });
+  }
+}
+
+
+
+
 }
